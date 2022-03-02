@@ -170,16 +170,7 @@ def recurse_dir(path: pathlib.Path, sub: int, parser: Parser) -> None:
                 parser.parse(str(subpath.parent)[sub:], subpath.stem, file.read())
 
 
-if __name__ == "__main__":
-    parser = Parser("book")
-    base = HERE / "interactions"
-    if not (HERE / "interactions").exists():
-        print("src directory does not exist!")
-        raise SystemExit(1)
-
-    if (HERE / "book").exists():
-        shutil.rmtree((HERE / "book"))
-
+def main(base: pathlib.Path, parser: Parser) -> None:
     sub = len(str(base)) + 1
 
     for path in base.iterdir():
@@ -188,3 +179,20 @@ if __name__ == "__main__":
                 parser.parse(str(path.parent)[sub:], path.stem, file.read())
         elif path.is_dir():
             recurse_dir(path, sub, parser)
+
+    return 0
+
+
+if __name__ == "__main__":
+    parser = Parser("book")
+    base = HERE / "interactions"
+    book = HERE / "book"
+
+    if not base.exists():
+        print("src directory does not exist!")
+        raise SystemExit(1)
+
+    if book.exists():
+        shutil.rmtree(book)
+
+    raise SystemExit(main(base, parser))
