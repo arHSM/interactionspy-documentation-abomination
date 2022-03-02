@@ -13,6 +13,8 @@ so [`./scrape.py`](./scrape.py) is my ~~abomination~~ creation to extract all do
 
 JAMES I SWEAR IF YOU DISAPPROVE OF THIS IN THE END THEN I'LL PERSONALLY COME TO YOU AND DELTE THE I.PY ORG
 
+![James](https://cdn.discordapp.com/stickers/876896783937187850.png)
+
 ## Back to serious stuff
 
 Steps to set-up:
