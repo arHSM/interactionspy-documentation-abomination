@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "interactionspy-documentation-abomination"
+version = "0.1.0"
+description = "My abomination, basically a scrapper that goes through the entire source of i.py and extracts doc-strings of classes, methods and functions"
+authors = ["arHSM <hanseungmin.ar@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+isort = "^5.10.1"
+pyright = "^1.1.225"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
