@@ -38,13 +38,11 @@ class Parser:
     data: ast.Module
     target_dir: pathlib.Path
     ignore: list[str]
-    summary: dict[str, list[str]]
     template: str = "{heading} {name}\n\n{body}"
 
     def __init__(self, target_dir: pathlib.Path) -> None:
         self.target_dir = target_dir
         self.ignore = []
-        self.summary = {}
 
     def parse(self, path: str, name: str, data: str) -> None:
         if data.startswith("#"):
@@ -60,10 +58,6 @@ class Parser:
 
     def write(self, path: str, name: str, buffer: str) -> None:
         name = name + ".md"
-        try:
-            self.summary[path].append(name)
-        except KeyError:
-            self.summary[path] = [name]
 
         folder = self.target_dir.joinpath(path)
         folder.mkdir(parents=True, exist_ok=True)
@@ -96,11 +90,10 @@ class Parser:
         for subnode in node.body:
             if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 if subnode.name == "__init__":
-                    signature = (
-                        ast.unparse(subnode.args)
-                        .replace("self, ", "")
-                        .replace("self", "")
-                    )
+                    # self will be the first arg to __init__, if not
+                    # then you are probably doing something wrongs
+                    subnode.args.args = subnode.args.args[1:]
+                    signature = ast.unparse(subnode.args)
                     continue
                 if not subnode.name.startswith("_"):
                     body += f"{self._parse_method(node.name, subnode)}"
@@ -186,18 +179,6 @@ def main(base: pathlib.Path, parser: Parser) -> None:
                 parser.parse(str(path.parent)[sub:], path.stem, file.read())
         elif path.is_dir():
             recurse_dir(path, sub, parser)
-
-    summary = "# SUMMARY\n\n"
-
-    for folder, files in parser.summary.items():
-        if folder:
-            summary += f"# {folder}\n"
-        for file in files:
-            summary += f"\n[{file}](./{folder + '/' if folder else ''}{file})"
-        summary += "\n\n"
-
-    with open((parser.target_dir / "SUMMARY.md"), "w") as summary_file:
-        summary_file.write(summary.strip())
 
     return 0
 
