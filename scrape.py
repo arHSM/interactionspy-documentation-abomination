@@ -36,13 +36,15 @@ def mod_comment_scanner(data: str) -> list[str] | None:
 class Parser:
     _data: str
     data: ast.Module
-    target_dir: str
+    target_dir: pathlib.Path
     ignore: list[str]
+    summary: dict[str, list[str]]
     template: str = "{heading} {name}\n\n{body}"
 
-    def __init__(self, target_dir: str) -> None:
+    def __init__(self, target_dir: pathlib.Path) -> None:
         self.target_dir = target_dir
         self.ignore = []
+        self.summary = {}
 
     def parse(self, path: str, name: str, data: str) -> None:
         if data.startswith("#"):
@@ -58,7 +60,12 @@ class Parser:
 
     def write(self, path: str, name: str, buffer: str) -> None:
         name = name + ".md"
-        folder = HERE.joinpath(self.target_dir, path)
+        try:
+            self.summary[path].append(name)
+        except KeyError:
+            self.summary[path] = [name]
+
+        folder = self.target_dir.joinpath(path)
         folder.mkdir(parents=True, exist_ok=True)
         with open((folder / name), "w") as f:
             f.write(buffer)
@@ -180,13 +187,25 @@ def main(base: pathlib.Path, parser: Parser) -> None:
         elif path.is_dir():
             recurse_dir(path, sub, parser)
 
+    summary = "# SUMMARY\n\n"
+
+    for folder, files in parser.summary.items():
+        if folder:
+            summary += f"# {folder}\n"
+        for file in files:
+            summary += f"\n[{file}](./{folder + '/' if folder else ''}{file})"
+        summary += "\n\n"
+
+    with open((parser.target_dir / "SUMMARY.md"), "w") as summary_file:
+        summary_file.write(summary.strip())
+
     return 0
 
 
 if __name__ == "__main__":
-    parser = Parser("book")
     base = HERE / "interactions"
     book = HERE / "book"
+    parser = Parser(book)
 
     if not base.exists():
         print("src directory does not exist!")
