@@ -1,0 +1,28 @@
+[book]
+authors = ["arHSM"]
+language = "en"
+multilingual = false
+src = "book"
+title = "interactions.py Documentation"
+description = "Easy, simple, scalable and modular: a Python API wrapper for interactions."
+
+[build]
+build-dir = "docs"
+create-missing = false
+
+[output.html]
+default-theme = "dark"
+preferred-dark-theme = "dark"
+curly-quotes = true
+copy-fonts = false
+no-section-label = true
+git-repository-url = "https://github.com/interactions-py/library/"
+git-repository-icon = "source"
+edit-url-template = "https://github.com/interactions-py/library/edit/master/{path}"
+
+[output.html.print]
+enable = false
+
+[output.html.playground]
+copyable = false
+copy-js = false

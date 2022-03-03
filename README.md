@@ -17,6 +17,8 @@ JAMES I SWEAR IF YOU DISAPPROVE OF THIS IN THE END THEN I'LL PERSONALLY COME TO 
 
 ## Back to serious stuff
 
+A `SUMMARY.md` can be found in the root dir for usage with mdbook.
+
 Steps to set-up:
 1. Download the [`./scrape.py`](./scrape.py) file.
 2. Clone the i.py repo

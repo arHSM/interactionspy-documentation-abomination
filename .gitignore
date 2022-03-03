@@ -1,1 +1,4 @@
 *.lock
+book/
+interactions/
+docs/
